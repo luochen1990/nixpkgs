@@ -1806,6 +1806,7 @@
   ./system/boot/tmp.nix
   ./system/boot/uki.nix
   ./system/boot/unl0kr.nix
+  ./system/boot/zram-as-tmp.nix
   ./system/boot/uvesafb.nix
   ./system/etc/etc-activation.nix
   ./tasks/auto-upgrade.nix
