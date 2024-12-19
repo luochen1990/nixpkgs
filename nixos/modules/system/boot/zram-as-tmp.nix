@@ -5,9 +5,9 @@ let
 in
 {
   options = {
-    boot.tmp = with lib; {
-      useZram = mkOption {
-        type = types.bool;
+    boot.tmp = {
+      useZram = lib.mkOption {
+        type = lib.types.bool;
         default = false;
         example = true;
         description = ''
