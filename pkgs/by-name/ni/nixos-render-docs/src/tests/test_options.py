@@ -16,6 +16,15 @@ def test_option_headings() -> None:
         content='', markup='#', info='', meta={}, block=True, hidden=False
     )
 
+def test_option_inline_footnotes_not_parsed() -> None:
+    # none of the options output formats can render footnotes, and `^[` in option
+    # descriptions (e.g. regex anchors written out in prose) is almost never an
+    # intended inline footnote, so it must stay literal text instead of crashing
+    # the build like it does with mdit-py-plugins >= 0.6 defaults
+    c = nixos_render_docs.options.HTMLConverter({}, 'local', 'vars', 'opt-', {})
+    expected = '<p>regex constraint: strMatching “^[^@]+@[^@]+$”</p>'
+    assert c._render('regex constraint: strMatching "^[^@]+@[^@]+$"') == expected
+
 def test_options_commonmark() -> None:
     c = nixos_render_docs.options.CommonMarkConverter({}, 'local')
     with Path('tests/sample_options_simple.json').open() as f:

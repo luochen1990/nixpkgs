@@ -41,6 +41,17 @@ class BaseConverter(Converter[md.TR], Generic[md.TR]):
         super().__init__()
         self._options = {}
         self._revision = revision
+        # `^[` in option descriptions (e.g. regex anchors written out in prose)
+        # is almost never an intended inline footnote, but a false positive of
+        # the inline footnote rule (enabled by default in mdit-py-plugins >= 0.6).
+        # none of the options output formats implement footnotes, so any such
+        # token would fail the entire documentation build. disable inline
+        # footnote parsing so `^[` stays literal text; reference footnotes
+        # (`[^x]`) are unaffected: they only resolve together with a matching
+        # `[^x]:` block definition, which option docs don't contain.
+        # ignoreInvalid keeps this working with mdit-py-plugins versions that
+        # don't register the rule at all (pre-0.6).
+        self._md.disable("footnote_inline", ignoreInvalid=True)
 
     def _sorted_options(self) -> list[tuple[str, RenderedOption]]:
         keys = list(self._options.keys())
