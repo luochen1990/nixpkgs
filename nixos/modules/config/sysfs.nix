@@ -225,6 +225,13 @@ in
           Type = "oneshot";
           RemainAfterExit = true;
 
+          # Restart atomically on definition change: the stop+start split
+          # path in switch-to-configuration-ng leaves a window where the
+          # path watcher (level-triggered PathExistsGlob) re-triggers the
+          # service with the stale pre-reload definition, persisting the
+          # old attribute value across switches until the next reboot.
+          X-StopIfChanged = false;
+
           # while we could be tempted to use simple shell script to set the
           # sysfs attributes specified by the path or glob pattern, it is
           # almost impossible to properly escape a glob pattern so that it
